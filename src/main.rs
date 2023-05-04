@@ -3,15 +3,18 @@ use libc::{timespec, CLOCK_BOOTTIME};
 static VEC_SIZE: usize = 1000;
 
 fn main() {
-	let mut a = Vec::<u64>::with_capacity(VEC_SIZE);
+	let mut a = Vec::<u128>::with_capacity(VEC_SIZE);
 	let mut accessor = a.as_mut_ptr(); 
 	unsafe {
 		let mut counter = 0;
 		let mut t = std::mem::MaybeUninit::zeroed();
 		let t = t.assume_init_mut();
 		while counter != VEC_SIZE {
-			libc::clock_gettime(CLOCK_BOOTTIME, t); // On release this takes ~17 nanoseconds between loops
-			*accessor = t.tv_nsec as u64;
+			libc::clock_gettime(CLOCK_BOOTTIME, t); // On release this takes ~19 nanoseconds between loops
+			let mut time: u128 = t.tv_sec as u128;
+			//time = time << 64;
+			time = /*time |*/ t.tv_nsec as u128;
+			*accessor = time;
 			accessor = accessor.add(1);
 			counter += 1;
 		}
