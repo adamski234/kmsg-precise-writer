@@ -1,11 +1,11 @@
-use std::fs::File;
+use std::{fs::File, env::args};
 
 use libc::CLOCK_BOOTTIME;
 
 static TEST_RUN_BATCH_SIZE: usize = 1000;
-const KMGS_PATH: *const libc::c_char = "/dev/kmsg\0".as_ptr() as *const libc::c_char;
-//static TIME_TO_TRIGGER_AT: u128 = 10_000_000 * 1_000_000; // At which point the message should be written, in microseconds. Currently set to exactly 10 million seconds
-static TIME_TO_TRIGGER_AT: u128 = 26500_000000;
+static WARMUP_RUN_SIZE: usize = 20;
+static WARMUP_ROUND_LENGTH: usize = 1_200; // time per loop in nanoseconds
+const KMSG_PATH: *const libc::c_char = "/dev/kmsg\0".as_ptr() as *const libc::c_char;
 
 fn main() {
 	/* =====================================
@@ -15,15 +15,16 @@ fn main() {
 	let dmesg_logged_deltas: Vec<u128>;
 	let average_delta: u128;
 	let mut over_avg_count: u128 = 0;
-	let kmsg_file: libc::c_int;
+	let mut kmsg_file: libc::c_int;
 
-	
+	let time_to_print = args().collect::<Vec<_>>()[1].parse::<u128>().unwrap() * 1_000_000_000; // time passed on the command line in seconds
+
 	unsafe {
 		/* ==============================
 		 * initialize all unsafe elements
 		 * ==============================
 		 */
-		kmsg_file = libc::open(KMGS_PATH, libc::O_RDWR);
+		kmsg_file = libc::open(KMSG_PATH, libc::O_WRONLY);
 		let mut counter = 0;
 		let mut t = std::mem::MaybeUninit::zeroed();
 		let t = t.assume_init_mut();
@@ -42,6 +43,7 @@ fn main() {
 			libc::write(kmsg_file, message.as_ptr() as *const libc::c_void, message.len());
 			counter += 1;
 		}
+		libc::close(kmsg_file);
 	}
 
 
@@ -80,28 +82,58 @@ fn main() {
 	 * calculate time returned by CLOCK_BOOTTIME that corresponds to the desired time
 	 * ==============================================================================
 	 */
-	let clock_time_to_trigger = TIME_TO_TRIGGER_AT * 1000 - average_delta; // multiply by 1000 to get nanoseconds from microseconds
+	let clock_time_to_trigger = time_to_print - average_delta - 10 * 1000;
+	let clock_time_to_trigger_warmup = clock_time_to_trigger - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
 	
 	/* =====================================================================
 	 * busy wait loop, constantly polling clock to check if time is in range
 	 * =====================================================================
 	 */
 	unsafe {
-		let message = format!("Message should be at exactly {}", TIME_TO_TRIGGER_AT);
+		kmsg_file = libc::open(KMSG_PATH, libc::O_WRONLY);
+		let msg = format!("Message should be at exactly {}\n", time_to_print);
+		println!("wtf {}", msg);
 		let mut time = std::mem::MaybeUninit::zeroed();
 		let time = time.assume_init_mut();
 		libc::clock_gettime(CLOCK_BOOTTIME, time);
 		let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
-		while time_nanosecs < clock_time_to_trigger {
+		while time_nanosecs < clock_time_to_trigger_warmup {
+			// each loop should take ~20 ns
 			libc::clock_gettime(CLOCK_BOOTTIME, time);
 			time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
 		}
-		libc::write(kmsg_file, message.as_ptr() as *const libc::c_void, message.len());
+		
+		/* ====================================================
+		 * do warmup prints to make performance more consistent
+		 * ====================================================
+		 */
+		let mut counter = 0;
+		while counter < WARMUP_RUN_SIZE + 1 {
+			let message = "WARMUP\n";
+			libc::write(kmsg_file, message.as_ptr() as *const libc::c_void, message.len());
+			counter += 1;
+			libc::clock_gettime(CLOCK_BOOTTIME, time);
+			time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+			if time_nanosecs >= clock_time_to_trigger {
+				break;
+			}
+		}
+
+		while time_nanosecs < clock_time_to_trigger { // make sure we're as close as possible
+			// each loop should take ~20 ns
+			libc::clock_gettime(CLOCK_BOOTTIME, time);
+			time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+		}
+
+		/* ==================================================
+		 * it's printing time
+		 * and then he printed all over the bad guys (jitter)
+		 * ==================================================
+		 */
+		libc::write(kmsg_file, msg.as_ptr() as *const libc::c_void, msg.len());
 		libc::clock_gettime(CLOCK_BOOTTIME, time);
 		println!("Finished at {} s {} ns", time.tv_sec, time.tv_nsec);
-	}
 
-	unsafe {
 		/* ===============
 		 * close resources
 		 * ===============
