@@ -4,8 +4,26 @@ use libc::CLOCK_BOOTTIME;
 
 static TEST_RUN_BATCH_SIZE: usize = 1000;
 static WARMUP_RUN_SIZE: usize = 20;
-static WARMUP_ROUND_LENGTH: usize = 1_200; // time per loop in nanoseconds
+static WARMUP_ROUND_LENGTH: usize = 1_2000; // time per loop in nanoseconds
 const KMSG_PATH: *const libc::c_char = "/dev/kmsg\0".as_ptr() as *const libc::c_char;
+const WARMUP_MSG: *const libc::c_void = "WARMUP\n".as_ptr() as *const libc::c_void;
+const WARMUP_MSG_LEN: usize = 7;
+const MSG_BEFORE_10: *const libc::c_void = "10 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const BEFORE_10_LEN: usize = 28;
+const MSG_BEFORE_9: *const libc::c_void = "9 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const COUNTER_MSG_LEN: usize = 27;
+const MSG_BEFORE_8: *const libc::c_void = "8 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_7: *const libc::c_void = "7 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_6: *const libc::c_void = "6 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_5: *const libc::c_void = "5 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_4: *const libc::c_void = "4 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_3: *const libc::c_void = "3 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_2: *const libc::c_void = "2 SECONDS UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const MSG_BEFORE_1: *const libc::c_void = "1 SECOND UNTIL 10 MILLION\n".as_ptr() as *const libc::c_void;
+const BEFORE_1_LEN: usize = 26;
+const TEN_MIL_MSG: *const libc::c_void = "🎉 🎉 🎉 I HAVE REACHED EXACTLY 10 MILLION SECONDS OF UPTIME! 🎉 🎉 🎉\n".as_ptr() as *const libc::c_void;
+const TEN_MIL_MSG_LEN: usize = 83;
+const ONE_SECOND_IN_NSEC: u128 = 1000 * 1000 * 1000;
 
 fn main() {
 	/* =====================================
@@ -80,10 +98,41 @@ fn main() {
 
 	/* ==============================================================================
 	 * calculate time returned by CLOCK_BOOTTIME that corresponds to the desired time
+	 * complete with evil code repetition
 	 * ==============================================================================
 	 */
-	let clock_time_to_trigger = time_to_print - average_delta - 10 * 1000;
+	let clock_time_to_trigger = time_to_print - average_delta - 160 * 1000;
 	let clock_time_to_trigger_warmup = clock_time_to_trigger - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_1 = clock_time_to_trigger - 1 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_1_warmup = clock_time_to_trigger_ctd_1 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_2 = clock_time_to_trigger - 2 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_2_warmup = clock_time_to_trigger_ctd_2 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_3 = clock_time_to_trigger - 3 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_3_warmup = clock_time_to_trigger_ctd_3 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_4 = clock_time_to_trigger - 4 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_4_warmup = clock_time_to_trigger_ctd_4 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_5 = clock_time_to_trigger - 5 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_5_warmup = clock_time_to_trigger_ctd_5 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+	
+	let clock_time_to_trigger_ctd_6 = clock_time_to_trigger - 6 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_6_warmup = clock_time_to_trigger_ctd_6 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_7 = clock_time_to_trigger - 7 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_7_warmup = clock_time_to_trigger_ctd_7 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_8 = clock_time_to_trigger - 8 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_8_warmup = clock_time_to_trigger_ctd_8 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_9 = clock_time_to_trigger - 9 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_9_warmup = clock_time_to_trigger_ctd_9 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
+
+	let clock_time_to_trigger_ctd_10 = clock_time_to_trigger - 10 * (ONE_SECOND_IN_NSEC + 20 * 1000);
+	let clock_time_to_trigger_ctd_10_warmup = clock_time_to_trigger_ctd_10 - (WARMUP_ROUND_LENGTH * WARMUP_RUN_SIZE) as u128;
 	
 	/* =====================================================================
 	 * busy wait loop, constantly polling clock to check if time is in range
@@ -91,46 +140,418 @@ fn main() {
 	 */
 	unsafe {
 		kmsg_file = libc::open(KMSG_PATH, libc::O_WRONLY);
-		let msg = format!("Message should be at exactly {}\n", time_to_print);
-		println!("wtf {}", msg);
 		let mut time = std::mem::MaybeUninit::zeroed();
 		let time = time.assume_init_mut();
+
 		libc::clock_gettime(CLOCK_BOOTTIME, time);
-		let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
-		while time_nanosecs < clock_time_to_trigger_warmup {
-			// each loop should take ~20 ns
-			libc::clock_gettime(CLOCK_BOOTTIME, time);
-			time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
-		}
 		
-		/* ====================================================
-		 * do warmup prints to make performance more consistent
-		 * ====================================================
-		 */
-		let mut counter = 0;
-		while counter < WARMUP_RUN_SIZE + 1 {
-			let message = "WARMUP\n";
-			libc::write(kmsg_file, message.as_ptr() as *const libc::c_void, message.len());
-			counter += 1;
-			libc::clock_gettime(CLOCK_BOOTTIME, time);
-			time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
-			if time_nanosecs >= clock_time_to_trigger {
-				break;
+		/* ================= COUNTDOWN 10 ================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_10_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
 			}
+			/* ====================================================
+				* do warmup prints to make performance more consistent
+				* ====================================================
+				*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_10 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_10 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+				* it's printing time
+				* and then he printed all over the bad guys (jitter)
+				* ==================================================
+				*/
+			libc::write(kmsg_file, MSG_BEFORE_10, BEFORE_10_LEN);
 		}
 
-		while time_nanosecs < clock_time_to_trigger { // make sure we're as close as possible
-			// each loop should take ~20 ns
-			libc::clock_gettime(CLOCK_BOOTTIME, time);
-			time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+		/* ================= COUNTDOWN 9 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_9_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+				* do warmup prints to make performance more consistent
+				* ====================================================
+				*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_9 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_9 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+				* it's printing time
+				* and then he printed all over the bad guys (jitter)
+				* ==================================================
+				*/
+			libc::write(kmsg_file, MSG_BEFORE_9, COUNTER_MSG_LEN);
 		}
 
-		/* ==================================================
-		 * it's printing time
-		 * and then he printed all over the bad guys (jitter)
-		 * ==================================================
-		 */
-		libc::write(kmsg_file, msg.as_ptr() as *const libc::c_void, msg.len());
+		/* ================= COUNTDOWN 8 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_8_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_8 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_8 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+		 	* it's printing time
+		 	* and then he printed all over the bad guys (jitter)
+		 	* ==================================================
+		 	*/
+			libc::write(kmsg_file, MSG_BEFORE_8, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 7 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_7_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_7 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_7 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_7, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 6 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_6_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_6 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_6 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_6, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 5 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_5_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_5 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_5 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_5, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 4 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_4_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_7 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_4 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_4, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 3 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_3_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_3 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_3 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_3, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 2 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_2_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_2 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_2 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_2, COUNTER_MSG_LEN);
+		}
+
+		/* ================= COUNTDOWN 1 =================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_ctd_1_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger_ctd_1 {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger_ctd_1 { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, MSG_BEFORE_1, BEFORE_1_LEN);
+		}
+
+		/* ================= MAIN MESSAGE ================== */
+		{
+			let mut time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			while time_nanosecs < clock_time_to_trigger_warmup {
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+			/* ====================================================
+			* do warmup prints to make performance more consistent
+			* ====================================================
+			*/
+			let mut counter = 0;
+			while counter < WARMUP_RUN_SIZE + 1 {
+				libc::write(kmsg_file, WARMUP_MSG, WARMUP_MSG_LEN);
+				counter += 1;
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128;
+				if time_nanosecs >= clock_time_to_trigger {
+					break;
+				}
+			}
+
+			while time_nanosecs < clock_time_to_trigger { // make sure we're as close as possible
+				// each loop should take ~20 ns
+				libc::clock_gettime(CLOCK_BOOTTIME, time);
+				time_nanosecs = time.tv_sec as u128 * 1_000_000_000 + time.tv_nsec as u128; // Convert from separate times to one unit
+			}
+
+			/* ==================================================
+			* it's printing time
+			* and then he printed all over the bad guys (jitter)
+			* ==================================================
+			*/
+			libc::write(kmsg_file, TEN_MIL_MSG, TEN_MIL_MSG_LEN);
+		}
+
 		libc::clock_gettime(CLOCK_BOOTTIME, time);
 		println!("Finished at {} s {} ns", time.tv_sec, time.tv_nsec);
 
